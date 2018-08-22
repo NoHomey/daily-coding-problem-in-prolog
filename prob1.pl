@@ -9,7 +9,5 @@
 hasElement([H], H).
 hasElement([H|T], E) :- not(H =:= E), hasElement(T, E).
 
-checkFor2Sum([H|_], L, K) :- E is K - H, hasElement(L, E).
-checkFor2Sum([H|T], L, K) :- E is K - H, not(hasElement(L, E)), checkFor2Sum(T, [H|L], K).
-
-sum2K(L, K) :- checkFor2Sum(L, [], K).
+sum2K([H|T], K) :- E is K - H, hasElement(T, E).
+sum2K([H|T], K) :- E is K - H, not(hasElement(T, E)), sum2K(T, K).
