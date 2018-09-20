@@ -41,15 +41,15 @@ splitList([Head | Tail], Count, [Head | Tail1], List2) :-
     Count1 is Count - 1,
     splitList(Tail, Count1, Tail1, List2).
 
-mergeSortList([], []).
-mergeSortList([Head], [Head]).
-mergeSortList(List, SortedList) :-
-    listLength(List, Length),
+mergeSortList([], 0, []).
+mergeSortList([Head], 1, [Head]).
+mergeSortList(List, Length, SortedList) :-
     Length > 1,
-    HalfLength is Length // 2,
-    splitList(List, HalfLength, List1, List2),
-    mergeSortList(List1, SortedList1),
-    mergeSortList(List2, SortedList2),
+    List1Length is Length // 2,
+    List2Length is Length - List1Length,
+    splitList(List, List1Length, List1, List2),
+    mergeSortList(List1, List1Length, SortedList1),
+    mergeSortList(List2, List2Length, SortedList2),
     mergeSortedLists(SortedList1, SortedList2, SortedList).
 
 splitList([Head | Tail], 0, Head, [], Tail).
@@ -58,17 +58,18 @@ splitList([Head | Tail], Count, MiddleElement, [Head | LeftListTail], RightList)
     Count1 is Count - 1,
     splitList(Tail, Count1, MiddleElement, LeftListTail, RightList).
 
-buildBalancedBSTFromSortedList([], _, node()).
-buildBalancedBSTFromSortedList([Head], Index, node(data(Head, Index), node(), node())).
-buildBalancedBSTFromSortedList(List, LeftIndex, node(data(MiddleElement, MiddleIndex), LeftSubTree, RightSubTree)) :-
-    listLength(List, Length),
+buildBalancedBSTFromSortedList([], 0, _, node()).
+buildBalancedBSTFromSortedList([Head], 1, Index, node(data(Head, Index), node(), node())).
+buildBalancedBSTFromSortedList(List, Length, LeftIndex, node(data(MiddleElement, MiddleIndex), LeftSubTree, RightSubTree)) :-
     Length > 1,
     Middle is Length // 2,
+    LeftListLength is Middle,
+    RightListLength is Length - (Middle + 1),
     MiddleIndex is LeftIndex + Middle,
     RightIndex is MiddleIndex + 1,
     splitList(List, Middle, MiddleElement, LeftList, RightList),
-    buildBalancedBSTFromSortedList(LeftList, LeftIndex, LeftSubTree),
-    buildBalancedBSTFromSortedList(RightList, RightIndex, RightSubTree).
+    buildBalancedBSTFromSortedList(LeftList, LeftListLength, LeftIndex, LeftSubTree),
+    buildBalancedBSTFromSortedList(RightList, RightListLength, RightIndex, RightSubTree).
 
 findInBST(Element, Index, node(data(Element, BSTIndex), _, _)) :-
     Index \== BSTIndex.
@@ -88,8 +89,10 @@ hasPairWithSumInBST([Head | Tail], Index, Sum, BST) :-
     hasPairWithSumInBST(Tail, Index1, Sum, BST).
 
 hasPairWithSumInList(List, Sum) :-
-    mergeSortList(List, SortedList),
+    listLength(List, Length),
     !,
-    buildBalancedBSTFromSortedList(SortedList, 0, BST),
+    mergeSortList(List, Length, SortedList),
+    !,
+    buildBalancedBSTFromSortedList(SortedList, Length, 0, BST),
     !,
     hasPairWithSumInBST(SortedList, 0, Sum, BST).
