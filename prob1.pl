@@ -18,3 +18,5 @@ hasPairWithSum([Head | Tail], Sum) :-
     Element is Sum - Head,
     \+(hasElement(Tail, Element)),
     hasPairWithSum(Tail, Sum).
+
+prob1(List, Sum) :- hasPairWithSum(List, Sum).
