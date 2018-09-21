@@ -5,6 +5,8 @@
 % If our input was [3, 2, 1], the expected output would be [2, 3, 6].
 % Follow-up: what if you can't use division?
 
+% Solution:
+
 product([Head], LeftProd, Head, [LeftProd]).
 product([Head | Tail], LeftProduct, RightProduct, [Product | ProductOfTail]) :-
     NextLeftProduct is Head * LeftProduct,

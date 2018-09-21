@@ -1,3 +1,4 @@
+% Problem 3:
 % Given the root to a binary tree, implement serialize(root), which serializes the tree into a string, and deserialize(s), which deserializes the string back into the tree.
 
 % For example, given the following Node class
@@ -11,6 +12,8 @@
 
 % node = Node('root', Node('left', Node('left.left')), Node('right'))
 % assert deserialize(serialize(node)).left.left.val == 'left.left'
+
+% Solution:
 
 serialize(node(), CurrentResult, [[] | CurrentResult]).
 serialize(node(Val, Left, Right), CurrentResult, RightResult) :-
