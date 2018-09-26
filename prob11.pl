@@ -86,28 +86,24 @@ reverseList(List, Reversed) :-
     reverseList(List, [], Reversed).
 
 wordsInTrieChildren([], _, Words, Words).
-wordsInTrieChildren([pair(Code, node(1, Children)) | Rest], Path, Words, [Word | WordsInRest]) :-
+wordsInTrieChildren([pair(Code, node(1, Children)) | Rest], Path, Words, [Word | WordsInChildren]) :-
     char_code(Letter, Code),
     CurrentPath = [Letter | Path],
-    wordsInTrieChildren(Children, CurrentPath, Words, WordsInChildren),
-    wordsInTrieChildren(Rest, Path, WordsInChildren, WordsInRest),
+    wordsInTrieChildren(Rest, Path, Words, WordsInRest),
+    wordsInTrieChildren(Children, CurrentPath, WordsInRest, WordsInChildren),
     reverseList(CurrentPath, Word).
-wordsInTrieChildren([pair(Code, node(0, Children)) | Rest], Path, Words, WordsInRest) :-
+wordsInTrieChildren([pair(Code, node(0, Children)) | Rest], Path, Words, WordsInChildren) :-
     char_code(Letter, Code),
     CurrentPath = [Letter | Path],
-    wordsInTrieChildren(Children, CurrentPath, Words, WordsInChildren),
-    wordsInTrieChildren(Rest, Path, WordsInChildren, WordsInRest).
-
-addPrefixToMatchedWords(_, Words, 0, Words).
-addPrefixToMatchedWords(Prefix, Words, 1, [Prefix | Words]).
+    wordsInTrieChildren(Rest, Path, Words, WordsInRest),
+    wordsInTrieChildren(Children, CurrentPath, WordsInRest, WordsInChildren).
 
 match(Prefix, Words, Matched) :-
     trie(Words, Trie),
     wordToCodes(Prefix, SearchPrefix),
-    matchTrie(SearchPrefix, Trie, pair(_, node(End, Children))),
+    matchTrie(SearchPrefix, Trie, pair(_, node(_, Children))),
     reverseList(Prefix, Path),
-    wordsInTrieChildren(Children, Path, [], MatchedInChildren),
-    addPrefixToMatchedWords(Prefix, MatchedInChildren, End, Matched).
+    wordsInTrieChildren(Children, Path, [], Matched).
 
 prob11(Prefix, Words, Matched) :-
     match(Prefix, Words, Matched).
