@@ -11,9 +11,9 @@
             "runtimeExecutable": "/usr/local/bin/swipl",
             "runtimeArgs": [],
             "env": {},
-            "program": "prob8.pl",
+            "program": "prob17.pl",
             "cwd": "${workspaceFolder}",
-            "startupQuery": "prob8(node(1, node(), node()), C)",
+            "startupQuery": "parse([d, \\n, \\t, s, \\n, \\t, f, \\., f, \\n, \\t, \\t, a], D)",
             "stopOnEntry": true,
             "traceCmds": {
                 "continue": [
